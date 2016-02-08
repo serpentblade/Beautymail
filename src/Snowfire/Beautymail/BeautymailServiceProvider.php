@@ -3,6 +3,7 @@
 namespace Snowfire\Beautymail;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class BeautymailServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,8 @@ class BeautymailServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../../views', 'beautymail');
 
         $this->app['mailer']->getSwiftMailer()->registerPlugin(new CssInlinerPlugin());
+
+        $this->registerBladeExtensions();
     }
 
     /**
@@ -54,5 +57,41 @@ class BeautymailServiceProvider extends ServiceProvider
     public function provides()
     {
         return [];
+    }
+
+    protected function registerBladeExtensions()
+    {
+        static $templateStack = [];
+
+        $blade = $this->app['blade.compiler'];
+
+        $blade->directive('beautymail', function($expression) {
+            if (Str::startsWith($expression, '(')) {
+                $expression = substr($expression, 1, -1);
+            }
+            return "<?php echo \$__env->make('beautymail::templates.'.${expression},  array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>";
+        });
+
+        $blade->directive('startBeautymail', function($expression) use (&$templateStack) {
+            if (Str::startsWith($expression, '(')) {
+                $expression = substr($expression, 1, -1);
+            }
+
+            $matcher = preg_match('#^\'([^\']+)\'(.*)$#', $expression, $matches);
+
+            $templateName = $matches[1];
+            $args = $matches[2];
+
+            $templateStack[] = $templateName;
+            return "<?php echo \$__env->make('beautymail::templates.${templateName}Start' ${args},  array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>";
+        });
+
+        $blade->directive('endBeautymail', function($args) use (&$templateStack) {
+            if (Str::startsWith($args, '(')) {
+                $args = substr($args, 1, -1);
+            }
+            $templateName = array_pop($templateStack);
+            return "<?php echo \$__env->make('beautymail::templates.${templateName}End' ${args}, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>";
+        });
     }
 }
