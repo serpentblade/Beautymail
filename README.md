@@ -65,20 +65,20 @@ Now create `resources/views/emails/welcome.blade.php`
 
 @section('content')
 
-	@include('beautymail::templates.widgets.articleStart')
+	@startBeautymail('widgets.article')
 
 		<h4 class="secondary"><strong>Hello World</strong></h4>
 		<p>This is a test</p>
 
-	@include('beautymail::templates.widgets.articleEnd')
+	@endBeautymail
 
 
-	@include('beautymail::templates.widgets.newfeatureStart')
+	@startBeautymail('widgets.newfeature')
 
 		<h4 class="secondary"><strong>Hello World again</strong></h4>
 		<p>This is another test</p>
 
-	@include('beautymail::templates.widgets.newfeatureEnd')
+	@endBeautymail
 
 @stop
 ```
@@ -92,7 +92,7 @@ That's it!
 To change colours for the different segments, pass a colour variable:
 
 ```php
-@include('beautymail::templates.widgets.articleStart', ['color' => '#0000FF'])
+@startBeatymail('widgets.article', ['color' => '#0000FF'])
 ```
 
 #### Minty template example
@@ -102,7 +102,7 @@ To change colours for the different segments, pass a colour variable:
 
 @section('content')
 
-	@include('beautymail::templates.minty.contentStart')
+	@startBeautymail('minty.content')
 		<tr>
 			<td class="title">
 				Welcome Steve
@@ -137,13 +137,13 @@ To change colours for the different segments, pass a colour variable:
 		</tr>
 		<tr>
 			<td>
-				@include('beautymail::templates.minty.button', ['text' => 'Sign in', 'link' => '#'])
+				@beautymail('minty.button', ['text' => 'Sign in', 'link' => '#'])
 			</td>
 		</tr>
 		<tr>
 			<td width="100%" height="25"></td>
 		</tr>
-	@include('beautymail::templates.minty.contentEnd')
+	@endBeautymail
 
 @stop
 ```
@@ -155,29 +155,29 @@ To change colours for the different segments, pass a colour variable:
 
 @section('content')
 
-    @include('beautymail::templates.ark.heading', [
+    @beautymail('ark.heading', [
 		'heading' => 'Hello World!',
 		'level' => 'h1'
 	])
 
-    @include('beautymail::templates.ark.contentStart')
+    @startBeautymail('ark.content')
 
         <h4 class="secondary"><strong>Hello World</strong></h4>
         <p>This is a test</p>
 
-    @include('beautymail::templates.ark.contentEnd')
+    @endBeautymail
 
-    @include('beautymail::templates.ark.heading', [
+    @beautymail('ark.heading', [
 		'heading' => 'Another headline',
 		'level' => 'h2'
 	])
 
-    @include('beautymail::templates.ark.contentStart')
+    @startBeautymail('ark.content')
 
         <h4 class="secondary"><strong>Hello World again</strong></h4>
         <p>This is another test</p>
 
-    @include('beautymail::templates.ark.contentEnd')
+    @endBeautymail
 
 @stop
 ```
@@ -189,18 +189,18 @@ To change colours for the different segments, pass a colour variable:
 
 @section('content')
 
-    @include ('beautymail::templates.sunny.heading' , [
+    @beautymail ('sunny.heading' , [
         'heading' => 'Hello!',
         'level' => 'h1',
     ])
 
-    @include('beautymail::templates.sunny.contentStart')
+    @startBeautymail('sunny.content')
 
         <p>Today will be a great day!</p>
 
-    @include('beautymail::templates.sunny.contentEnd')
+    @endBeautymail
 
-    @include('beautymail::templates.sunny.button', [
+    @beautymail('sunny.button', [
         	'title' => 'Click me',
         	'link' => 'http://google.com'
     ])
